@@ -136,9 +136,9 @@ AUTHENTICATION_BACKENDS = [
 # Google account
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # This is the default of django
 EMAIL_HOST = 'smtp.gmail.com' # This is just for goole
-EMAIL_HOST_USER = 'MP.Rezaifar@gmail.com' # The email which we are working with
+EMAIL_HOST_USER = '' # The email which we are working with
 EMAIL_PORT = 587 # This port is just for django
-EMAIL_HOST_PASSWORD = 'kzjlffummexoyvkv' # The app password
+EMAIL_HOST_PASSWORD = '' # The app password
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'Social Network'
 
