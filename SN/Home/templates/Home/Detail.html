@@ -1,0 +1,85 @@
+{% extends 'Base.html' %}
+{% block title %}Detail{% endblock %}
+{% block content %}
+    <h1 style="text-align: center"><i>Details</i></h1><hr><br>
+    <h2 style="text-align: center">User {{post.user}}</h2><br>
+
+    {# count comments #}
+    {% if post_comments.count == 1 %}
+        <p style="display: inline-block" class="alert alert-dark">{{post_comments.count}} comment</p>
+    {% elif post_comments.count > 1 %}
+        <p style="display: inline-block" class="alert alert-dark">{{post_comments.count}} comments</p>
+    {% endif %}
+
+    {# Buttons for owner of the post and profile #}
+    {% if request.user.id == post.user.id %}
+        <a style="margin-bottom: 4px" class="btn btn-info" href="{% url 'Home:update' post.id %}">Update</a>
+        <a style="margin-bottom: 4px" class="btn btn-danger" href="{% url 'Home:delete' post.id %}">Delete</a>
+    {% endif %}
+
+    {# Post details #}
+    <div class="card">
+        <h3 style="text-align: center ; margin-top: 4px"><i>Post</i></h3>
+        {# Post content #}
+        <p class="card-body">
+            {{post.post_body}}<br>
+            {# This is like button for other users and counting like on each post #}
+            {% if request.user.id != post.user.id %}
+                {% if post.post_like_count == 0 %}
+                    <a class=" {% if can_like %}disabled{% endif %} btn btn-warning" style="margin-top: 4px" href="{% url 'Home:like' post.id %}">{{post.post_like_count}} like</a>
+                {% elif post.post_like_count == 1 %}
+                    <a class=" {% if can_like %}disabled{% endif %} btn btn-warning" style="margin-top: 4px" href="{% url 'Home:like' post.id %}">{{post.post_like_count}} like</a>
+                {% elif post.post_like_count > 1 %}
+                    <a class=" {% if can_like %}disabled{% endif %} btn btn-warning" style="margin-top: 4px" href="{% url 'Home:like' post.id %}">{{post.post_like_count}} likes</a>
+                {% endif %}
+            {% endif %}
+
+
+        </p><br>
+        <div class="card text-white bg-dark">
+            {% for post_comment in post_comments %}
+                <p style="margin-left: 20px">{{post_comment.user}} Commented : </p>
+                <p class="card-header">{{post_comment.comment_body}}</p>
+                {% if request.user.is_authenticated %}
+                    <form style="margin-left: 6px" action="{% url 'Home:reply' post.id post_comment.id %}" method="post" class="col-md-6">
+                        {% csrf_token %}
+                        {{reply_form.as_p}}
+                        <input type="submit" value="Reply">
+                    </form>
+                {% endif %}
+                {% with reply_comments=post_comment.reply_comments.all %}
+                    {% for reply_comment in reply_comments %}
+                        <div class="bg-primary p-3 m-2">
+                            <p>{{reply_comment.user}} replied : </p>
+                            <p>{{reply_comment.comment_body}}</p>
+                            <p style="display: inline-block" class="alert alert-danger">{{reply_comment.create | timesince}}</p>
+                        </div>
+                    {% endfor %}
+                {% endwith %}
+                <p class="card-header">{{post_comment.create | timesince}}</p>
+            {% empty %}
+                {% if request.user.id != post.user.id %}
+                    <p style="text-align: center;margin-top: 10px">No comments yet for this post</p>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div><br>
+
+    {# Comment form for other users #}
+    {% if request.user.id != post.user.id %}
+        <form action="" method="post" class="col-md-6" novalidate>
+            {% csrf_token %}
+            {{form.as_p}}
+            <input type="submit" value="Leave a comment">
+        </form><br>
+    {% else %}
+        <p style="display: inline-block" class="alert alert-danger">You can not leave a comment for yourself</p><br>
+        <p style="display: inline-block" class="alert alert-danger">You can not like your post(s)</p>
+    {% endif %}<br>
+
+    {# About post #}
+    <h4 class="about" style="border: black solid;display: inline-block;width: 129px;padding: 1px;"><i>About post</i></h4><br>
+    created at : <p>{{post.create | date:'P l j F Y'}}</p>
+    updated at : <p>{{post.update | date:'P l j F Y'}}</p>
+
+{% endblock %}

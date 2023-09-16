@@ -1,0 +1,14 @@
+{% extends 'Base.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+    <h1><i>Login</i></h1><hr><br>
+    <form action="" method="post" class="col-md-3" novalidate>
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="Login">
+    </form><br>
+    <ul>
+        <li><p>If you have forgotten your password use <a style="text-decoration: none" href="{% url 'account:password_reset' %}">Reset password</a></p></li>
+        <li><p>If you have not registered before user <a style="text-decoration: none" href="{% url 'account:register' %}">Register</a></p></li>
+    </ul>
+{% endblock %}

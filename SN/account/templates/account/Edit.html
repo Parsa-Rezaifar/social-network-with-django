@@ -1,0 +1,10 @@
+{% extends 'Base.html' %}
+{% block title %}Edit profile{% endblock %}
+{% block content %}
+    <h1><i>Edit profile</i></h1><hr><br>
+    <form action="" method="post" novalidate class="col-md-3">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="Edit">
+    </form>
+{% endblock %}

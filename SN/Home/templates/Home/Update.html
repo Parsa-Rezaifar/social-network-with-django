@@ -1,0 +1,10 @@
+{% extends 'Base.html' %}
+{% block title %}Update{% endblock %}
+{% block content %}
+    <h1><i>Update</i></h1><hr><br>
+    <form action="" method="post" novalidate>
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="Update">
+    </form>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'Base.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+    {% if not request.user.is_authenticated %}
+        <ul>
+            <li>Have registered before , use <a style="text-decoration: none" href="{% url 'account:login' %}">Login</a></li><br>
+            <li>You are new , use <a style="text-decoration: none" href="{% url 'account:register' %}">Register</a></li>
+        </ul>
+    {% endif %}
+    <h1 style="text-align: center"><i>Home</i></h1><hr><br>
+    {% if request.user.is_authenticated %}
+        <form action="" method="get" class="col-md-6" novalidate>
+            {{search_form.as_p}}
+            <input type="submit" value="Search">
+        </form>
+        <h2 style="text-align: center"><i>Posts</i></h2>
+        <div class="card">
+            {% for post in posts %}
+                <a style="text-decoration: none" class="card-body" href="{% url 'account:profile' post.user.id %}">{{post.post_body | truncatewords:8}}</a>
+            {% empty %}
+                <p style="text-align: center;margin-top: 10px;color: red">No post shared yet</p>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="text-align: center" class="alert alert-info">To see posts , please log in first</p>
+    {% endif %}
+{% endblock %}
